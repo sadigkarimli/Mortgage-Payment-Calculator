@@ -1,0 +1,62 @@
+// Sql statements for creating data base structures of tables
+
+create table customers (
+    customer_id number constraint cust_id_pk primary key,
+    first_name varchar2(35) not null,
+    last_name varchar2(35) not null,
+    salary number constraint  cust_sal_ck check (salary > 0)
+);
+
+alter table customers modify salary number not null;
+
+create table properties (
+    property_id number constraint prt_id_pk primary key,
+    adress varchar2(100),
+    property_value number constraint prt_val_ck check (property_value > 0)
+);
+
+create table monthly_payments (
+    payment_id number constraint pay_id_pk primary key,
+    customer_id number constraint mp_cust_id_fk  references customer(customer_id) not null,
+    property_id number constraint mp_prt_id_fk references property(property_id) not null,
+    month_no number not null,
+    payment_date date not null,
+    total number not null,
+    base number not null,
+    interest number not null
+);
+
+create table summary (
+    summary_id number constraint sum_id_pk primary key,
+    customer_id number constraint sum_cust_id_fk references customer(customer_id) not null,
+    property_id number constraint sum_prt_id_fk references property(property_id) not null,
+    total_amount number constraint sum_tot_amt_ck check (total_amount > 0) not null,
+    total_base number constraint sum_tot_bs_ck check (total_base > 0) not null,
+    total_interest number constraint sum_tot_int_ck check (total_interest > 0) not null
+);
+
+create sequence customer_seq
+    start with 1
+    increment by 1
+    nocycle
+    nocache;
+
+create sequence property_seq
+    start with 1
+    increment by 1
+    nocycle
+    nocache;
+
+create sequence summary_seq
+    start with 1
+    increment by 1
+    nocycle
+    nocache;
+
+create sequence payment_seq
+    start with 1
+    increment by 1
+    nocycle
+    nocache;
+
+commit;
